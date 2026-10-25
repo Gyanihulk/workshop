@@ -98,7 +98,7 @@ def icon(slide, x, y, d, circle, icon_file, name):
     shape(slide, MSO_SHAPE.OVAL, x, y, d, d, circle, name=f"{name} circle")
     pad = d * 0.28
     pic = slide.shapes.add_picture(str(ICONS / icon_file), Inches(x + pad), Inches(y + pad), Inches(d - 2 * pad), Inches(d - 2 * pad))
-    pic.name = f"{name} icon"
+    pic.name = f"icon:{icon_file}"  # to_slides.py resolves the image by this name
 
 
 def chip(slide, x, y, w, label, fill=AMBER, color=INK, h=0.36, size=11, name="chip"):
