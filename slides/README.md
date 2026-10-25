@@ -1,5 +1,8 @@
 # Slides source of truth
 
+> The new opening slides are now built in Python: see `deck/README.md` and `deck/build.py`. The `.md` files here are the content spec; `build.py` is what produces the .pptx.
+
+
 The Google Slides deck is the published copy; these markdown files are the source.
 Edit the `.md`, then apply it to the deck. Log each change in `CHANGELOG.md`.
 

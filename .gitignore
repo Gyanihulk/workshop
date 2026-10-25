@@ -6,3 +6,4 @@ kb/data/raw/
 kb/out/
 credentials*.json
 token*.json
+deck/out/
