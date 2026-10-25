@@ -177,7 +177,7 @@ def build_intro(prs, layout):
     )
     rows = [
         ("rocket_light_FFFFFF.png", "10 products shipped solo", "From idea to real users, outside the day job"),
-        ("project_21D2ED.png", "Backend Engineer, Hero MotoCorp", "Kafka, AWS and GCP, real production traffic"),
+        ("project_21D2ED.png", "Backend Engineer, Freedo Rentals", "Bike rental platform: Kafka, AWS and GCP at scale"),
         ("client_F49D0A.png", "Co-founder, Adhian Gurus", "A zero-commission tutoring marketplace"),
     ]
     for i, (ic, head, sub) in enumerate(rows):
@@ -199,7 +199,7 @@ def build_intro(prs, layout):
         ("2021", "ITDA", "Training Desk Analyst"),
         ("2021–22", "Capline Services", "Associate"),
         ("2022–24", "Appfoster", "Software Engineer II"),
-        ("2024–Now", "Hero MotoCorp", "Backend Engineer"),
+        ("2024–Now", "Freedo Rentals", "Backend Engineer, Hero MotoCorp"),
     ]
     for i, (yr, org, role) in enumerate(steps):
         y = 1.95 + i * 1.05
