@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+kb/data/raw/
+kb/out/
+credentials*.json
+token*.json

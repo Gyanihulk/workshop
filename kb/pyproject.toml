@@ -1,0 +1,24 @@
+[project]
+name = "workshop-kb"
+version = "0.1.0"
+description = "Turn Google Docs resources into branded PDFs, Google Slides/Docs updates and a RAG-ready knowledge base."
+requires-python = ">=3.11"
+dependencies = ["pydantic>=2", "reportlab>=4"]
+
+[project.optional-dependencies]
+mongo = ["pymongo>=4"]
+google = ["google-api-python-client>=2", "google-auth>=2", "google-auth-oauthlib>=1"]
+dev = ["pytest>=8", "mongomock>=4"]
+
+[project.scripts]
+wkb = "workshop_kb.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

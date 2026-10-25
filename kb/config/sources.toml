@@ -1,0 +1,20 @@
+# One block per Google Doc. `include` is an allow-list of heading prefixes:
+# only matching sections are published. Anything else (company/interviewer
+# profiles, personal narrative, logistics) is dropped before PDF, export or Mongo.
+# Omit `include` to publish the whole doc.
+
+[[source]]
+slug = "security-system-design"
+title = "Security & System Design: Scenario Questions"
+doc_id = "14KrUvJsoVVyV9qV-tAVLrU7DmVzeJpJEvotmK13mp1E"
+topic = "security-system-design"
+audience = "students"
+
+[[source]]
+slug = "backend-interview-qa"
+title = "Backend Interview Question Bank"
+doc_id = "1VwXm9tmeJ14aECcoaEmnPgVy9Pl0VX1gLrvctTuX7K4"
+topic = "backend"
+audience = "students"
+# Personal doc: sections 0, 1, 3, 4, 5, 6 are about one interview. Only the question bank is generic.
+include = ["2.", "2 "]

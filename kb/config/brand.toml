@@ -1,0 +1,9 @@
+[brand]
+name = "Adhian Gurus"
+tagline = "Breaking Into Tech in 2026"
+primary = "#1F3A5F"
+accent = "#F2A900"
+text = "#1A1A1A"
+muted = "#6B7280"
+footer = "Breaking Into Tech in 2026 | Adamya Kumar"
+logo = ""            # optional path to a PNG
