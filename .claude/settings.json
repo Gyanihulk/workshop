@@ -3,5 +3,19 @@
     "allow": [
       "mcp__Google_Slides"
     ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "mcp__Google_Slides__update_presentation",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/slides-guard.py\"",
+            "statusMessage": "Checking Slides edit for slide deletions"
+          }
+        ]
+      }
+    ]
   }
 }
