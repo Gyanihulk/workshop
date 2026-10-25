@@ -1,0 +1,136 @@
+"""Part 1: Resume (20 slides)."""
+
+SPECS = [
+    dict(kind="cover", eyebrow="Part 1 of 4 · Resume", title="A resume that gets read",
+         subtitle="One page. Real numbers. A live link. Built for the software that parses it and the person who skims it.",
+         part="Breaking Into Tech in 2026 · Part 1 of 4",
+         notes="Welcome. In this part we fix the single document that decides whether anyone ever sees your projects. 60 minutes: how resumes are read, how to write bullets, how to tailor, then two short activities."),
+
+    dict(kind="cards", title="What you will leave with", subtitle="Three things you can use the same day.",
+         items=[
+             dict(icon="doc", head="A one-page resume", body="A clean structure that survives parsing software and a quick skim."),
+             dict(icon="target", head="Bullets with proof", body="Every line follows one formula: action, tool, measurable result."),
+             dict(icon="bolt", head="A tailoring habit", body="Re-target your resume to a job post in ten minutes, without rewriting it."),
+         ],
+         notes="Frame the outcome: they will edit their own resume during the session. Ask them to open it now on a laptop or phone."),
+
+    dict(kind="vsteps", title="How your resume is actually read", subtitle="Five stops, and your file has to survive every one.",
+         items=[
+             dict(head="Apply", body="Your file lands in an applicant tracking system (ATS) that stores it."),
+             dict(head="Parse", body="The system pulls out name, dates, titles and skills. Messy layouts break this step."),
+             dict(head="Search and filter", body="Recruiters search by keywords, titles and dates, and shortlist."),
+             dict(head="Skim", body="A person scans the top third first. Deep reading comes later, if at all."),
+             dict(head="Interview", body="Whatever is on the page becomes the questions you get asked."),
+         ],
+         notes="Not every company uses an ATS the same way and some are more forgiving than others, so the safe move is a simple layout. The point: you are writing for a parser first and a human second."),
+
+    dict(kind="bullets_stat", title="What a recruiter looks for first",
+         bullets=["Job title and company: does your latest role match what they are hiring for?",
+                  "Numbers, not adjectives: a result stands out at a glance.",
+                  "Keywords from the job post: the exact stack and role terms.",
+                  "A live link: portfolio, GitHub or a deployed project. Proof beats promises."],
+         stat="~7s", stat_label="a commonly quoted first look", stat_note="Treat it as an order of magnitude: your top third decides whether they read on.",
+         notes="The 7-second figure is widely quoted and I have not found a single authoritative study, so say 'commonly quoted' and use it as a mindset, not a fact."),
+
+    dict(kind="two_col", title="Parsers read text, not design",
+         left=dict(icon="check", head="Do", bullets=["One column, left to right", "Standard headings: Experience, Projects, Education, Skills", "A text-based PDF (you can select the words)", "One date format everywhere", "Contact details in the body of the page"]),
+         right=dict(icon="x", head="Avoid", bullets=["Tables and text boxes for layout", "Icons, graphics, skill-bar charts", "A photo (not needed in most hiring)", "Key details only in a header or footer", "A scanned image of a document"]),
+         notes="Advice here is consistent across ATS guides, but most are from resume vendors, so keep it simple rather than chasing rules. Test: paste your resume into a plain-text editor. If the order is scrambled, a parser may struggle too."),
+
+    dict(kind="cards", title="One page, four blocks", subtitle="Reverse chronological: most recent and most relevant first.",
+         items=[
+             dict(icon="globe", head="Header", body="Name, email, phone, LinkedIn, GitHub, portfolio link."),
+             dict(icon="codefile", head="Projects and experience", body="Two to four bullets each, every one with a result. Projects count as experience."),
+             dict(icon="bolt", head="Skills", body="Languages, frameworks, tools. Matched to the job you want, not a dump of everything."),
+             dict(icon="cap", head="Education", body="Degree, college, year. Keep it short once you have projects."),
+         ],
+         notes="Freshers should keep to one page: nobody scrolls to page two. If a project or internship is stronger than your degree, it goes first."),
+
+    dict(kind="table", title="The header: what goes in, what stays out",
+         head=["Include", "Why", "Skip"], widths=[4.0, 4.0, 4.15],
+         rows=[["Professional email", "Clean and easy to search", "Nicknames or very old ids"],
+               ["LinkedIn and GitHub", "Proof is one click away", "Links that need a login"],
+               ["Portfolio or live project", "Shows work, not claims", "A tutorial clone as your headline"],
+               ["City and phone", "Recruiters call and schedule", "Full postal address"],
+               ["One-line headline", "Names the role you want next", "Photo, birth date, marital status"]],
+         notes="Open each link on your phone before you send. A broken portfolio link is worse than none."),
+
+    dict(kind="steps", title="The bullet formula", subtitle="Every bullet answers four questions, in this order.",
+         items=[dict(icon="bolt", head="Action verb", body="Built, cut, automated, shipped, led."),
+                dict(icon="code", head="What you made", body="The thing, in plain words."),
+                dict(icon="layers", head="With what", body="Language, framework or service."),
+                dict(icon="chart", head="The result", body="A number: percent, time, users, cost.")],
+         callout="Built a Redis caching layer in Node.js that cut API latency by 20%.", callout_tag="EXAMPLE",
+         notes="Walk the example left to right. Ask the room which part is missing from their own weakest bullet."),
+
+    dict(kind="compare", title="Weak bullets vs strong bullets",
+         rows=[("Responsible for backend development", "Built a Redis caching layer that cut API latency by 20%"),
+               ("Worked on improving performance", "Automated billing retries, cutting manual effort by 40%"),
+               ("Good knowledge of Python and SQL", "Built a RAG pipeline (Python, MongoDB, Pinecone) used by 30+ students"),
+               ("Helped the team with various tasks", "Shipped a Flutter app with UPI payments, live on the Play Store")],
+         notes="Left column: vague duties. Right column: specific outcomes. Notice that none of the strong bullets use the word 'responsible'."),
+
+    dict(kind="activity", title="Rewrite lab: fix three bullets", minutes=10,
+         steps=["Pick three bullets from your resume.", "Underline the verb, the tool and the result in each.", "Rewrite any that miss one. Use a real number.", "Swap with a neighbour for a second read."],
+         output=["Three stronger bullets", "A repeatable habit", "One fresh pair of eyes"],
+         notes="Walk the room. If someone has no number, point them to the next slide: numbers hide in users, speed and time saved."),
+
+    dict(kind="cards", title="No experience? Your numbers are hiding", subtitle="If you do not know the number, measure it.",
+         items=[dict(icon="people", head="People", body="Users, classmates, teammates, downloads, GitHub stars."),
+                dict(icon="chart", head="Speed and size", body="Load time, response time, rows processed, lines of code removed."),
+                dict(icon="bolt", head="Effort saved", body="Hours saved, steps automated, manual work removed.")],
+         notes="Honest numbers only. 'Used by 12 classmates' is better than an invented 10,000 and survives the interview question 'how did you measure that?'."),
+
+    dict(kind="vsteps", title="Projects count as experience", subtitle="A four-line template for every project entry.",
+         items=[dict(head="Name and outcome", body="Profly AI: exam-practice platform used by 30+ students."),
+                dict(head="Stack", body="Node.js, FastAPI, MongoDB, Pinecone."),
+                dict(head="Two bullets", body="What you built and what it achieved, with a number."),
+                dict(head="Links", body="Live demo and repository, both tested.")],
+         notes="Use a real example from the room if someone volunteers, otherwise use Profly AI as the model."),
+
+    dict(kind="steps", title="Skills: match the job post",
+         items=[dict(icon="search", head="Collect", body="Copy the repeated keywords from three job posts you want."),
+                dict(icon="target", head="Filter", body="Keep only what you could talk about for two minutes."),
+                dict(icon="layers", head="Order", body="Put the skills most relevant to this role first.")],
+         callout="If you cannot explain it for two minutes in an interview, take it off.", callout_tag="RULE",
+         notes="A long skills list is a risk, not a bonus: every item is a possible interview question."),
+
+    dict(kind="vsteps", title="Tailor in ten minutes", subtitle="Same resume, re-aimed. Do this for every serious application.",
+         items=[dict(head="Read the post twice", body="Underline the role, the stack and the outcomes they want."),
+                dict(head="Mirror the language", body="Use their exact terms where they are true for you."),
+                dict(head="Reorder", body="Move the most relevant project or job to the top."),
+                dict(head="Trim", body="Cut what does not help for this role."),
+                dict(head="Save and name it", body="FirstName_LastName_Role.pdf, then open the file to check it.")],
+         notes="Keep a master resume with everything, then cut down per application. Never lie to match a keyword."),
+
+    dict(kind="two_col", title="LinkedIn and GitHub should tell the same story",
+         left=dict(icon="in", head="LinkedIn", bullets=["Headline names the role you want next, not 'Student'", "About: three lines on who you are, what you build, what is next", "Skills use words from your target job posts", "Class projects count: describe scope and team size"]),
+         right=dict(icon="codefile", head="GitHub", bullets=["Pin your best three or four repositories", "Each pinned repo has a README with a screenshot", "Live demo links that work", "A real commit history shows you ship"]),
+         notes="Recruiters often check LinkedIn first. Mismatched dates or titles between resume and LinkedIn raise doubt."),
+
+    dict(kind="steps", title="Build it in LaTeX with Overleaf", subtitle="Optional, but it makes consistent formatting easy.",
+         items=[dict(icon="globe", head="Sign up", body="Free account at overleaf.com. It runs in the browser, nothing to install."),
+                dict(icon="doc", head="Pick a template", body="Search the gallery for 'resume'. Jake's Resume is a popular start."),
+                dict(icon="code", head="Edit text, not layout", body="Replace sections and bullets. Spacing stays tidy."),
+                dict(icon="rocket", head="Compile and export", body="Download the PDF and check it reads in order.")],
+         callout="Word or Google Docs also work if they export a clean single-column PDF.", callout_tag="OK TOO",
+         notes="LaTeX is a means, not a requirement. Do not let template hunting replace writing good bullets."),
+
+    dict(kind="checklist", title="Before you hit send",
+         items=["One page, exported as PDF", "Contact line with working links", "Every bullet has a verb, a tool and a number", "Skills match the job post", "No photo, no tables, no icons", "Same dates and titles as LinkedIn", "Spelling checked by someone else", "File named FirstName_LastName_Role.pdf", "Opens correctly on your phone", "You can explain every line out loud"],
+         notes="Hand the checklist around. The last item is the one that matters in the interview."),
+
+    dict(kind="activity", title="The seven-second swap", minutes=8,
+         steps=["Pair up and swap resumes.", "Your partner looks for just seven seconds.", "They say out loud what they remember.", "Fix the biggest gap you hear."],
+         output=["A stranger's first impression", "Your one biggest fix", "Proof the top third works"],
+         notes="Time it with a visible clock. The gap between what you meant and what they remembered is the lesson."),
+
+    dict(kind="resources", title="This week",
+         groups=[dict(icon="target", head="Do first", lines=["Rewrite three bullets with real numbers", "Tailor to one real job post", "Export a clean one-page PDF"]),
+                 dict(icon="globe", head="Tools", lines=["Overleaf (LaTeX templates)", "Google Docs or Word, single column", "A plain-text editor to test parsing"]),
+                 dict(icon="people", head="Then", lines=["Ask two people for a seven-second read", "Update your LinkedIn headline", "Apply to five roles that fit"])],
+         notes="Ask each person to commit to the first item before they leave."),
+
+    dict(kind="takeaway", text="A resume is proof, not a biography.", sub="Next: DSA patterns, the other half of getting through the door.",
+         notes="Close the part. Point to the next one."),
+]

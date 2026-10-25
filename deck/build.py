@@ -174,6 +174,10 @@ def bullets(slide, x, y, w, h, items, *, size=14, color=INK, name="Bullets", gap
         pPr.set("indent", "-228600")
         for old in pPr.findall(qn("a:buChar")):
             pPr.remove(old)
+        for old in pPr.findall(qn("a:buClr")):
+            pPr.remove(old)
+        clr = etree.SubElement(pPr, qn("a:buClr"))
+        etree.SubElement(clr, qn("a:srgbClr"), val=color)
         etree.SubElement(pPr, qn("a:buChar"), char="\u2022")
     return tb
 

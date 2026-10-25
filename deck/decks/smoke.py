@@ -1,0 +1,20 @@
+LOREM = "Short body text for a card, about twenty words so we can see how it wraps inside the card at this width."
+SPECS = [
+ dict(kind="cover", eyebrow="Part 1 of 4", title="Resume that gets read", subtitle="One page, real numbers, a live link.", part="Breaking Into Tech in 2026 · Part 1 of 4"),
+ dict(kind="section", number="01", title="How hiring works now", subtitle="Before you edit a word, know who reads it."),
+ dict(kind="cards", title="Four cards", subtitle="Subtitle line.", items=[dict(icon=i, head="Card head", body=LOREM) for i in ("doc","target","code","hand")]),
+ dict(kind="cards", title="Six cards", items=[dict(icon=i, head="Card head", body=LOREM) for i in ("doc","target","code","hand","bolt","chart")]),
+ dict(kind="compare", title="Weak vs strong", rows=[("Responsible for backend development","Built a Redis cache that cut API latency by 20%")]*4),
+ dict(kind="steps", title="Horizontal steps", items=[dict(head="Step head", body=LOREM, icon="doc") for _ in range(4)], callout="A tip goes here in one line."),
+ dict(kind="steps", title="Numbered steps", items=[dict(head="Step head", body=LOREM) for _ in range(3)]),
+ dict(kind="vsteps", title="Vertical steps", items=[dict(head="Row head", body="One or two lines of explanation that sits to the right of the heading.") for _ in range(5)]),
+ dict(kind="bullets_stat", title="Bullets and stat", bullets=["First point that is a little long to see wrapping","Second point","Third point","Fourth point"], stat="~15", stat_label="patterns", stat_note="cover most interview problems", source="example"),
+ dict(kind="two_col", title="Two columns", left=dict(icon="doc", head="Left head", bullets=["a point","another point","third point"]), right=dict(icon="code", head="Right head", bullets=["a point","another point","third point"])),
+ dict(kind="code", title="Code", code=["def two_sum(nums, target):","    seen = {}","    for i, n in enumerate(nums):","        if target - n in seen:","            return [seen[target - n], i]","        seen[n] = i"], side_head="How it works", side=["One pass","Hash map lookup","O(n) time"]),
+ dict(kind="table", title="Table", head=["Pattern","Use when","Example"], widths=[3.0,5.0,4.15], rows=[["Two pointers","sorted array","pair sum"]]*5),
+ dict(kind="activity", title="Seven-second swap", minutes=10, steps=["Pair up with someone","Swap resumes","Look for 7 seconds","Say what stood out"], output=["One note from a stranger","A list of fixes"]),
+ dict(kind="checklist", title="Checklist", items=["One page, PDF export","Contact line with links","Every bullet has a number","Skills match the job post","No photo, no tables","File named FirstName_LastName"]),
+ dict(kind="takeaway", text="Patterns beat problem count.", sub="Revisit what you solved, a few days later."),
+ dict(kind="resources", title="Resources", groups=[dict(icon="doc",head="Read",lines=["one","two","three"]),dict(icon="code",head="Practice",lines=["one","two","three"]),dict(icon="chart",head="Track",lines=["one","two","three"])]),
+ dict(kind="stat", stat="7s", label="is how long a recruiter may spend on a first pass", points=["Point one","Point two","Point three"], source="example"),
+]
