@@ -26,9 +26,11 @@ OUT = HERE / "out" / "slides_api"
 
 # slide title in the pptx -> (new slide id, donor slide in the Google deck, donor child ids to keep)
 SLIDES = {
-    "Hi, I'm Adamya": dict(id="n_intro", donor="p1", keep_title="p1_i5", keep_number=None, pos=1),
-    "Warm-up: pick your corner": dict(id="n_warm", donor="p3", keep_title="p3_i2", keep_number="p3_i25", pos=2),
-    "From classroom to first client": dict(id="n_flow", donor="p3", keep_title="p3_i2", keep_number="p3_i25", pos=None),
+    "Hi, I'm Adamya": dict(id="n_about", donor="p1", keep_title="p1_i5", keep_number=None),
+    "Four jobs, four lessons": dict(id="n_exp", donor="p3", keep_title="p3_i2", keep_number="p3_i25"),
+    "Beyond the job": dict(id="n_beyond", donor="p3", keep_title="p3_i2", keep_number="p3_i25"),
+    "Warm-up: pick your corner": dict(id="n_warm", donor="p3", keep_title="p3_i2", keep_number="p3_i25"),
+    "From classroom to first client": dict(id="n_flow", donor="p3", keep_title="p3_i2", keep_number="p3_i25"),
 }
 DONOR_CHILDREN = {
     "p1": [f"p1_i{k}" for k in range(2, 11)],
@@ -86,7 +88,9 @@ def text_requests(oid, tf):
             full.append(r.text)
             runs.append((idx, idx + len(r.text), r))
             idx += len(r.text)
-        aligns.append((start, idx, p.alignment))
+        pPr = p._p.pPr
+        has_bullet = pPr is not None and pPr.find(qn("a:buChar")) is not None
+        aligns.append((start, idx, p.alignment, has_bullet, p.space_after))
         if pi < len(paras) - 1:
             full.append("\n")
             idx += 1
@@ -115,7 +119,11 @@ def text_requests(oid, tf):
         except Exception:
             pass
         out.append({"updateTextStyle": {"objectId": oid, "textRange": {"type": "FIXED_RANGE", "startIndex": s, "endIndex": e}, "style": style, "fields": ",".join(fields)}})
-    for s, e, a in aligns:
+    for s, e, a, bullet, space in aligns:
+        if space is not None:
+            out.append({"updateParagraphStyle": {"objectId": oid, "textRange": {"type": "FIXED_RANGE", "startIndex": s, "endIndex": max(e, s + 1)}, "style": {"spaceBelow": {"magnitude": round(space.pt, 1), "unit": "PT"}}, "fields": "spaceBelow"}})
+        if bullet:
+            out.append({"createParagraphBullets": {"objectId": oid, "textRange": {"type": "FIXED_RANGE", "startIndex": s, "endIndex": max(e, s + 1)}, "bulletPreset": "BULLET_DISC_CIRCLE_SQUARE"}})
         al = {PP_ALIGN.CENTER: "CENTER", PP_ALIGN.RIGHT: "END"}.get(a)
         if al:
             out.append({"updateParagraphStyle": {"objectId": oid, "textRange": {"type": "FIXED_RANGE", "startIndex": s, "endIndex": max(e, s + 1)}, "style": {"alignment": al}, "fields": "alignment"}})
@@ -180,19 +188,22 @@ def convert(slide, cfg):
 
 
 def main():
+    import sys
+
+    only = set(sys.argv[1:])  # e.g. python3 to_slides.py n_about n_exp n_beyond
     prs = Presentation(PPTX)
     OUT.mkdir(parents=True, exist_ok=True)
+    chosen = {title: cfg for title, cfg in SLIDES.items() if not only or cfg["id"] in only}
     structure = []
-    for title, cfg in SLIDES.items():
+    # duplicates land right after their donor: later duplicates of p3 end up first, so list them in reverse order
+    for title, cfg in reversed(list(chosen.items())):
         children = {c: f"{cfg['id']}_{c.split('_', 1)[1]}" for c in DONOR_CHILDREN[cfg["donor"]]}
         structure.append({"duplicateObject": {"objectId": cfg["donor"], "objectIds": {cfg["donor"]: cfg["id"], **children}}})
-    # intro lands right after p1 by itself; move the warm-up (duplicated from p3) to index 2
-    structure.append({"updateSlidesPosition": {"slideObjectIds": ["n_warm"], "insertionIndex": 2}})
     (OUT / "structure.json").write_text(json.dumps(structure, separators=(",", ":")))
     for sl in prs.slides:
         t = sl.shapes.title.text_frame.text if sl.shapes.title is not None else ""
-        if t in SLIDES:
-            cfg = SLIDES[t]
+        if t in chosen:
+            cfg = chosen[t]
             data = convert(sl, cfg)
             (OUT / f"{cfg['id']}.json").write_text(json.dumps(data, separators=(",", ":")))
             print(cfg["id"], len(data), "requests")

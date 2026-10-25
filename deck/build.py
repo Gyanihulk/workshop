@@ -32,8 +32,9 @@ TINT, WHITE, PANEL, RULE = "EEF2FF", "FFFFFF", "111A33", "334155"
 HEAD, BODY = "Cambria", "Calibri"
 
 # Titles of the slides this script owns (used to find and replace them on re-run)
-T_INTRO, T_WARM, T_FLOW = "Hi, I'm Adamya", "Warm-up: pick your corner", "From classroom to first client"
-LEGACY_TITLES = {T_INTRO, T_WARM, T_FLOW}
+T_ABOUT, T_EXP, T_BEYOND = "Hi, I'm Adamya", "Four jobs, four lessons", "Beyond the job"
+T_WARM, T_FLOW = "Warm-up: pick your corner", "From classroom to first client"
+LEGACY_TITLES = {T_ABOUT, T_EXP, T_BEYOND, T_WARM, T_FLOW}
 
 
 # ----------------------------------------------------------------------------- helpers
@@ -164,60 +165,147 @@ def notes(slide, body):
 
 
 # ----------------------------------------------------------------------------- slides
-def build_intro(prs, layout):
+def bullets(slide, x, y, w, h, items, *, size=14, color=INK, name="Bullets", gap=4):
+    """Text box with real bullets (a:buChar), one paragraph per item."""
+    tb = text(slide, x, y, w, h, [dict(t=i, size=size, color=color, space_after=gap) for i in items], name=name)
+    for para in tb.text_frame.paragraphs:
+        pPr = para._p.get_or_add_pPr()
+        pPr.set("marL", "228600")
+        pPr.set("indent", "-228600")
+        for old in pPr.findall(qn("a:buChar")):
+            pPr.remove(old)
+        etree.SubElement(pPr, qn("a:buChar"), char="\u2022")
+    return tb
+
+
+def build_about(prs, layout):
+    """Slide 2: who I am, as four memory anchors (Understand, Connect, Own, Scale)."""
     s = prs.slides.add_slide(layout)
-    # decorative circle, same motif as the cover slide
     shape(s, MSO_SHAPE.OVAL, 10.9, -2.3, 5.2, 5.2, PURPLE, name="Decor circle")
     text(s, 0.9, 0.85, 6.0, 0.3, dict(t="ABOUT YOUR SPEAKER", size=14, bold=True, color=CYAN), name="Eyebrow")
-    set_title(s, T_INTRO, size=54, color=WHITE, x=0.8, y=1.25, w=6.3, h=1.1)
+    set_title(s, T_ABOUT, size=54, color=WHITE, x=0.8, y=1.25, w=7.5, h=1.1)
     text(
-        s, 0.9, 2.5, 6.0, 1.0,
-        dict(t="A working engineer, not a professional speaker. This is what I wish I had known in my final year.", size=18, color="CBD5E1"),
+        s, 0.9, 2.45, 9.9, 0.6,
+        dict(t="Backend engineer, 5+ years. I build systems that stay up, and I teach what I learn.", size=20, color="CBD5E1"),
         name="Subtitle",
     )
-    rows = [
-        ("rocket_light_FFFFFF.png", "10 products shipped solo", "From idea to real users, outside the day job"),
-        ("project_21D2ED.png", "Backend Engineer, Freedo Rentals", "Bike rental platform: Kafka, AWS and GCP at scale"),
-        ("client_F49D0A.png", "Co-founder, Adhian Gurus", "A zero-commission tutoring marketplace"),
+    cards = [
+        ("1", "Understand", "ITDA · 2021", "Sat with officials, turned their daily process into system requirements, migrated 1,000+ records."),
+        ("2", "Connect", "Capline Services · 2021–22", "Plugged in 10+ insurance APIs and used logs to fix data errors. Accuracy up 30%."),
+        ("3", "Own", "Appfoster · 2022–24", "Owned client workflows and releases: messaging, scheduling, follow-ups. Productivity up 35%."),
+        ("4", "Scale", "Freedo Rentals · 2024–Now", "At Hero MotoCorp: Kafka, Redis and CloudWatch for zero-downtime APIs. Latency down 20%."),
     ]
-    for i, (ic, head, sub) in enumerate(rows):
-        y = 3.75 + i * 0.88
-        icon(s, 0.9, y, 0.66, "162238", ic, f"Stat {i + 1}")
-        text(s, 1.8, y + 0.02, 5.2, 0.35, dict(t=head, size=17, bold=True, color=WHITE, font=HEAD), name=f"Stat {i + 1} head")
-        text(s, 1.8, y + 0.36, 5.2, 0.3, dict(t=sub, size=13, color=MUTED), name=f"Stat {i + 1} sub")
+    W, GAP, X0, Y0, H = 2.78, 0.2, 0.9, 3.5, 2.7
+    for i, (n, verb, org, desc) in enumerate(cards):
+        x = X0 + i * (W + GAP)
+        last = i == len(cards) - 1
+        shape(s, MSO_SHAPE.ROUNDED_RECTANGLE, x, Y0, W, H, PANEL, radius=0.06, name=f"Anchor card {n}")
+        chip(s, x + 0.25, Y0 + 0.25, 0.4, n, fill=AMBER if last else PURPLE, color=INK if last else WHITE, h=0.4, size=14, name=f"Anchor number {n}")
+        text(s, x + 0.25, Y0 + 0.8, W - 0.5, 0.45, dict(t=verb, size=24, bold=True, font=HEAD, color=WHITE), name=f"Anchor {n} verb")
+        text(s, x + 0.25, Y0 + 1.3, W - 0.5, 0.3, dict(t=org, size=13, bold=True, color=CYAN), name=f"Anchor {n} org")
+        text(s, x + 0.25, Y0 + 1.7, W - 0.5, 0.95, dict(t=desc, size=13, color=MUTED), name=f"Anchor {n} text")
     text(
-        s, 0.9, 6.55, 6.4, 0.4,
-        dict(t="A few years ago I was in your seat. Today is the path I actually took.", size=15, italic=True, color="E2E8F0", font=HEAD),
+        s, 0.9, 6.5, 11.6, 0.45,
+        dict(t="I turn business requirements into stable systems a team can ship predictably.", size=17, italic=True, color="E2E8F0", font=HEAD),
         name="Closing line",
-    )
-
-    # timeline panel
-    shape(s, MSO_SHAPE.ROUNDED_RECTANGLE, 7.7, 0.9, 5.0, 5.75, PANEL, radius=0.05, name="Timeline panel")
-    text(s, 8.15, 1.25, 4.2, 0.3, dict(t="THE PATH", size=12, bold=True, color=CYAN), name="Timeline label")
-    shape(s, MSO_SHAPE.RECTANGLE, 8.31, 2.15, 0.04, 3.15, RULE, name="Timeline rule")
-    steps = [
-        ("2021", "ITDA", "Training Desk Analyst"),
-        ("2021–22", "Capline Services", "Associate"),
-        ("2022–24", "Appfoster", "Software Engineer II"),
-        ("2024–Now", "Freedo Rentals", "Backend Engineer, Hero MotoCorp"),
-    ]
-    for i, (yr, org, role) in enumerate(steps):
-        y = 1.95 + i * 1.05
-        dot = AMBER if i == len(steps) - 1 else PURPLE
-        shape(s, MSO_SHAPE.OVAL, 8.15, y + 0.12, 0.36, 0.36, dot, name=f"Dot {i + 1}")
-        text(s, 8.8, y, 3.6, 0.25, dict(t=yr, size=12, bold=True, color=CYAN), name=f"Year {i + 1}")
-        text(s, 8.8, y + 0.25, 3.6, 0.35, dict(t=org, size=18, bold=True, color=WHITE, font=HEAD), name=f"Org {i + 1}")
-        text(s, 8.8, y + 0.62, 3.6, 0.3, dict(t=role, size=13, color=MUTED), name=f"Role {i + 1}")
-    text(
-        s, 8.15, 6.12, 4.3, 0.4,
-        dict(t="B.Tech CSE (2019) · MBA Finance & HR, Gurukul Kangri, Haridwar", size=11, color=MUTED),
-        name="Education",
     )
     notes(
         s,
-        """About 60 seconds. Point first: "I'll show you a path, not a pitch."
-Name the Adhian Gurus co-founder role plainly, once, so nobody is surprised when it shows up as a case study later. Do not sell it.
-Facts on this slide come from your own earlier slide ("10 products", the four jobs); confirm they are still right before presenting.""",
+        """About 60 to 75 seconds. Memorize the four words: Understand, Connect, Own, Scale.
+Open: "I'm a backend engineer. I started with one question: how do real systems actually work for the people using them?"
+1 Understand (ITDA, E-Office): I sat with officials and turned their daily processes into system requirements, and migrated 1,000+ records. That's where I learned production debugging.
+2 Connect (Capline): 10+ insurance provider APIs, validation logic, reading logs to fix data inconsistencies. Accuracy up 30%.
+3 Own (Appfoster): I designed APIs and workflows for messaging, scheduling and follow-ups, built integrations with retries and background workers, and coordinated clients and junior developers to ship on time.
+4 Scale (Freedo Rentals, Hero MotoCorp): Kafka to decouple services, Redis to cut API latency by 20%, CloudWatch monitoring, zero-downtime deployments.
+Close: "What I enjoy most is turning a business requirement into something stable that a team can ship predictably." Then: "Alongside this I have taught school and college students, and a few years ago I was in your seat."
+Facts all come from your resume. Confirm that "Freedo Rentals" is how you want the current role named.""",
+    )
+    return s
+
+
+def build_experience(prs, layout, donor):
+    """Slide 3: bullets per job, with the numbers from the resume."""
+    s = prs.slides.add_slide(layout)
+    set_title(s, T_EXP)
+    text(s, 0.7, 1.3, 12.0, 0.4, dict(t="What I built at each step, in the order it happened.", size=16, color=SLATE), name="Subtitle")
+    jobs = [
+        ("UNDERSTAND", "ITDA", "Training Desk Analyst · Jan–May 2021", [
+            "Supported the E-Office rollout: migrated 1,000+ legacy records with stakeholders",
+            "Python scripts and batch workflows: effort down 50%, paper use down 40%",
+        ]),
+        ("CONNECT", "Capline Services", "Associate · Aug 2021–Apr 2022", [
+            "Integrated 10+ insurance provider APIs with validation: data accuracy up 30%",
+            "Log-based debugging of production issues: 99.9% uptime, support load down 15%",
+        ]),
+        ("OWN", "Appfoster", "Software Engineer II · Apr 2022–Nov 2024", [
+            "Messaging, scheduling and follow-up workflows: user productivity up 35%",
+            "LinkedIn and Microsoft integrations with retries: manual effort down 40%",
+            "Marketplace backend revamp: engagement up 20%, transactions up 15%",
+        ]),
+        ("SCALE", "Hero MotoCorp (Freedo Rentals)", "Backend Engineer · Nov 2024–Now", [
+            "Kafka async workflows to decouple services; Redis caching cut API latency by 20%",
+            "CloudWatch monitoring and alerting, zero-downtime deployments",
+        ]),
+    ]
+    Y0, H, GAP = 1.8, 1.18, 0.12
+    for i, (verb, org, role, items) in enumerate(jobs):
+        y = Y0 + i * (H + GAP)
+        shape(s, MSO_SHAPE.ROUNDED_RECTANGLE, 0.6, y, 12.15, H, TINT, radius=0.1, shadow=True, name=f"Job card: {org}")
+        chip(s, 0.9, y + 0.15, 1.45, verb, h=0.3, size=11, name=f"{org} anchor")
+        text(s, 0.9, y + 0.5, 4.2, 0.35, dict(t=org, size=18, bold=True, font=HEAD), name=f"{org} name")
+        text(s, 0.9, y + 0.86, 4.2, 0.25, dict(t=role, size=12, color=SLATE), name=f"{org} role")
+        bullets(s, 5.3, y + 0.13, 7.2, H - 0.2, items, size=14, name=f"{org} bullets", gap=3)
+    add_slide_number(s, donor)
+    notes(
+        s,
+        """Walk it top to bottom, one sentence per job, then stop. Don't read the bullets.
+ITDA: "I started in a government E-Office rollout, moving over a thousand legacy records and automating paperwork with Python."
+Capline: "Then I learned integrations: ten insurance APIs, and debugging from logs."
+Appfoster: "Then ownership: client workflows, integrations with retries, a marketplace backend."
+Hero MotoCorp / Freedo Rentals: "Now scale and reliability: Kafka, Redis, CloudWatch."
+Numbers are from your resume (you own them): be ready to explain how each was measured.""",
+    )
+    return s
+
+
+def build_beyond(prs, layout, donor):
+    """Slide 4: education, teaching, solo products, toolbox."""
+    s = prs.slides.add_slide(layout)
+    set_title(s, T_BEYOND)
+    text(s, 0.7, 1.3, 12.0, 0.4, dict(t="Code, business, teaching and building on my own.", size=16, color=SLATE), name="Subtitle")
+    tiles = [
+        ("Education", "resume_7B39EC.png", WHITE, [
+            "B.Tech, Computer Science (2015–19)", "MBA, Finance (2019–21)", "Gurukul Kangri, Haridwar", "Both sides: code and the business behind it."]),
+        ("Teaching", "client_F49D0A.png", NAVY_2, [
+            "Taught school and college students during my studies.", "It is why I explain clearly, and why I mentor juniors today."]),
+        ("Built on my own", "rocket_7B39EC.png", WHITE, [
+            "10 products shipped solo, from idea to real users.", "Profly AI, Eclipse, and Adhian Gurus (co-founder)."]),
+        ("Toolbox", "project_21D2ED.png", NAVY_2, [
+            "Node.js, TypeScript, Nest.js", "AWS, Kafka, Redis", "PostgreSQL, MongoDB, GraphQL", "Docker, CI/CD, CloudWatch"]),
+    ]
+    for i, (head, ic, circle, lines) in enumerate(tiles):
+        x = 0.6 + i * 3.1
+        dark = i % 2 == 1
+        shape(s, MSO_SHAPE.ROUNDED_RECTANGLE, x, 1.9, 2.85, 4.15, NAVY if dark else TINT, radius=0.08, shadow=True, name=f"Tile: {head}")
+        icon(s, x + 0.3, 2.2, 0.8, circle, ic, head)
+        text(s, x + 0.3, 3.2, 2.3, 0.45, dict(t=head, size=19, bold=True, font=HEAD, color=WHITE if dark else INK), name=f"{head} title")
+        text(
+            s, x + 0.3, 3.75, 2.3, 2.2,
+            [dict(t=l, size=14, color="CBD5E1" if dark else SLATE, space_after=6) for l in lines],
+            name=f"{head} text",
+        )
+    shape(s, MSO_SHAPE.ROUNDED_RECTANGLE, 0.6, 6.3, 12.15, 0.62, NAVY, radius=0.2, name="Footer band")
+    text(
+        s, 0.9, 6.3, 11.6, 0.62,
+        dict(t="Also: published research on home automation (2019). Outside work: horse riding, game development, music.", size=14, color=WHITE),
+        name="Footer text", anchor=MSO_ANCHOR.MIDDLE,
+    )
+    add_slide_number(s, donor)
+    notes(
+        s,
+        """15 to 20 seconds. This is the human slide.
+Teaching is the thread: "I have taught school and college students, which is why I am comfortable explaining things, and why you will hear me explain rather than lecture."
+Mention one product by name (Profly AI) and move to the warm-up.""",
     )
     return s
 
@@ -327,13 +415,19 @@ def main():
     dark, light = by_name["TitleDark"], by_name["ContentLight"]
     donor = next(sl for sl in prs.slides if title_of(sl) == "What we'll cover today")
 
-    intro = build_intro(prs, dark)
+    about = build_about(prs, dark)
+    exp = build_experience(prs, light, donor)
+    beyond = build_beyond(prs, light, donor)
     warm = build_warmup(prs, light, donor)
     flow = build_flow(prs, light, donor)
 
-    # 2. position: intro + warm-up right after the cover, flow right after "What we'll cover today"
-    move_slide(prs, intro, 1)
-    move_slide(prs, warm, 2)
+    # 2. position: about, experience, beyond, warm-up right after the cover; flow after "What we'll cover today"
+    for i, sl in enumerate((about, exp, beyond, warm), start=1):
+        move_slide(prs, sl, i)
+    # the old "Who's running" slide says the same thing: skip it in slideshow mode (kept, not deleted)
+    for sl in prs.slides:
+        if title_of(sl) == "Who's running this workshop":
+            sl._element.set("show", "0")
     titles = [title_of(sl) for sl in prs.slides]
     move_slide(prs, flow, titles.index("What we'll cover today") + 1)
 
